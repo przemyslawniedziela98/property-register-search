@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results for "{{ query }}"</h1>
+    {% if matching_books %}
+        <ul>
+            {% for book in matching_books %}
+                <li>{{ book }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No books found matching your query.</p>
+    {% endif %}
+    <a href="{% url 'evidence_book_search' %}">Back to search</a>
+</body>
+</html>
