@@ -9,7 +9,6 @@ def search_results(request):
     if request.method == 'POST':
         query = request.POST.get('keywords', '')
         matches = search_database.search(query)
-        print(query)
         return render(request, 'search/search_results.html', {'query': query, 'matching_books': matches})
     
     return render(request, 'search/search_form.html')
