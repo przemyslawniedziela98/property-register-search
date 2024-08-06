@@ -3,19 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Results</title>
+    <title>Electronic Land and Mortgage Register Results</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        .rounded-input {
+            border-radius: 25px;
+            padding-left: 38px;
+        }
+        .no-border {
+            border: 0;
+            box-shadow: none;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        .input-with-icon i {
+            position: absolute;
+            left: 10px; 
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none; 
+            color: #6c757d;
+            font-size: 20px; 
+        }
+        .btn-custom {
+            border-radius: 5px;
+            background-color: #f0f0f0; 
+            color: black; 
+            border: none;
+            margin-top: 15px;
+            display: block;
+            margin-left: auto;
+            width: 130px;
+            margin-right: auto; 
+        }
+        .card-body {
+            text-align: center; 
+        }
+        .sticky-top {
+            position: sticky;
+            top: 0;
+            z-index: 1020; 
+            background-color: white; 
+            box-shadow: 0 0 0 0; 
+        }
+
+    </style>
+</head>
 </head>
 <body>
-    <h1>Search Results for "{{ query }}"</h1>
+    <div class="sticky-top" style="padding-bottom: 10px;">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'evidence_book_search' %}">Electronic Land and Mortgage Register Search</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <form action="{% url 'search_results' %}" method="post" class="no-border" style="margin-top: 20px; margin-left: 20px;">
+            <div class="form-group d-flex align-items-center">
+                <div class="input-group" style="width: 400px;">
+                    {% csrf_token %}
+                    <div class="input-with-icon w-100">
+                        <i class="bi bi-search"></i>
+                        <input type="text" class="form-control rounded-input" id="query" name="keywords" placeholder="Enter keywords (e.g. location or owner)" value="{{ query }}">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-custom ml-3" style="margin-top: 0px;">Search</button>
+            </div>
+        </form>
+    </div>
     {% if matching_books %}
-        <ul>
+    
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Book number</th>
+              <th scope="col">type</th>
+              <th scope="col">department</th>
+              <th scope="col">location</th>
+              <th scope="col">owner</th>
+            </tr>
+          </thead>
+          <tbody>
             {% for book in matching_books %}
-                <li>{{ book }}</li>
+                <tr>
+                  <td>{{ book.numer_ksiegi }}</td>
+                  <td>{{ book.typ_ksiegi }}</td>
+                  <td>{{ book.oznaczenie_wydzialu }}</td>
+                  <td>{{ book.polozanie }}</td>
+                  <td>{{ book.wlasciciel }}</td>
+                </tr>
             {% endfor %}
-        </ul>
+
+          </tbody>
+        </table>
     {% else %}
-        <p>No books found matching your query.</p>
+        <p>No books found.</p>
     {% endif %}
-    <a href="{% url 'evidence_book_search' %}">Back to search</a>
 </body>
 </html>
