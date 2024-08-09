@@ -1,0 +1,43 @@
+.rounded-input {
+    border-radius: 25px;
+    padding-left: 38px;
+}
+.no-border {
+    border: 0;
+    box-shadow: none;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 10px; 
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; 
+    color: #6c757d;
+    font-size: 20px; 
+}
+.btn-custom {
+    border-radius: 5px;
+    background-color: #f0f0f0; 
+    color: black; 
+    border: none;
+    margin-top: 15px;
+    display: block;
+    margin-left: auto;
+    width: 130px;
+    margin-right: auto; 
+}
+.card-body {
+    text-align: center; 
+}
+.sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 1020; 
+    background-color: white; 
+    box-shadow: 0 0 0 0; 
+}
