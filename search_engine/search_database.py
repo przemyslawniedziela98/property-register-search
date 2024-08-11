@@ -6,21 +6,26 @@ from whoosh.qparser import MultifieldParser, FuzzyTermPlugin
 
 def extract_data_from_dep(io_dep_text: str, dep_4_text: str) -> Dict[str, List[str]]:
     """
-    Extract parcel numbers from the IO and IV departments sections of a land registry document.
+    Extract parcel numbers, identifiers and mortage from the IO and IV departments sections of a land registry document.
 
     Args:
         io_dep_text (str): The text from the IO department section.
         dep_4_text (str): The text from the IV department section.
 
     Returns:
-        Dict[str, List[str]]: A dictionary containing fist parcel number and mortage (if any).
+        Dict[str, List[str]]: A dictionary containing fist identifier and mortage (if any).
     """
     extract_numbers = lambda t: ''.join([n for n in t[0] if n.isdigit()]) if len(t) > 0 else ""
-    number = extract_numbers(re.findall(r"Numer działki \d+", io_dep_text))    
+    uid_search = re.search(r"Identyfikator działki .*", io_dep_text)
+    uid = ""
+    if uid_search: 
+        uid = uid_search.group(0).split("Identyfikator działki ")[1]
+       
     mortgage = ""
     if "Lp" in dep_4_text:
         mortgage = extract_numbers(re.findall(r"waluta \d+", dep_4_text))
-    return {"number": number, "mortgage": mortgage}
+        
+    return {"identifier": uid, "mortgage": mortgage}
 
 
 def search(query_str: str, index_dir: str = 'indexdir', limit: int = None) -> List[Dict[str, Any]]:

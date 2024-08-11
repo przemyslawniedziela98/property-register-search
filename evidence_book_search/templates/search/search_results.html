@@ -24,7 +24,7 @@
               <th scope="col">department</th>
               <th scope="col">location</th>
               <th scope="col">owner</th>
-              <th scope="col">first number</th>
+              <th scope="col">Lp.1 geo identifier</th>
               <th scope="col">mortgage</th>
             </tr>
           </thead>
@@ -36,7 +36,7 @@
                   <td>{{ book.oznaczenie_wydzialu }}</td>
                   <td>{{ book.polozanie }}</td>
                   <td>{{ book.wlasciciel }}</td>
-                  <td>{{ book.number }}</td>
+                  <td><a href="https://mapy.geoportal.gov.pl/imap/Imgp_2.html?identifyParcel={{ book.identifier }}"> {{ book.identifier }} </a></td>
                   <td>{{ book.mortgage }}</td>
                 </tr>
             {% endfor %}
