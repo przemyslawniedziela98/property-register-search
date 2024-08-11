@@ -4,22 +4,24 @@ from whoosh.index import open_dir
 from whoosh.qparser import MultifieldParser, FuzzyTermPlugin
 
 
-def extract_data_from_io_dep(io_dep_text: str) -> Dict[str, List[str]]:
+def extract_data_from_dep(io_dep_text: str, dep_4_text: str) -> Dict[str, List[str]]:
     """
-    Extract parcel numbers and locations from the IO department section of a land registry document.
+    Extract parcel numbers from the IO and IV departments sections of a land registry document.
 
     Args:
-        io_dep_text (str): The text from the IO department section of the land registry document.
+        io_dep_text (str): The text from the IO department section.
+        dep_4_text (str): The text from the IV department section.
 
     Returns:
-        Dict[str, List[str]]: A dictionary containing list of parcel numbers and locations
+        Dict[str, List[str]]: A dictionary containing fist parcel number and mortage (if any).
     """
-    first_occurrence = lambda t: t[0] if len(t) > 0 else ""
-    parcel_numbers = re.findall(r"Numer działki \d+", io_dep_text)
-    location_pattern = r"Położenie \(numer porządkowy / województwo, gmina, miejscowość\).*?(\d+ )?"
-    locations = re.findall(location_pattern, io_dep_text)
-    return {'number': first_occurrence(parcel_numbers), 
-            'location': first_occurrence(locations)}
+    extract_numbers = lambda t: ''.join([n for n in t[0] if n.isdigit()]) if len(t) > 0 else ""
+    number = extract_numbers(re.findall(r"Numer działki \d+", io_dep_text))    
+    mortgage = ""
+    if "Lp" in dep_4_text:
+        mortgage = extract_numbers(re.findall(r"waluta \d+", dep_4_text))
+    return {"number": number, "mortgage": mortgage}
+
 
 def search(query_str: str, index_dir: str = 'indexdir', limit: int = None) -> List[Dict[str, Any]]:
     """
@@ -48,6 +50,6 @@ def search(query_str: str, index_dir: str = 'indexdir', limit: int = None) -> Li
         extended_results = []
         for result in results: 
             result = dict(result)
-            result.update(extract_data_from_io_dep(result['dzial_i_o']))
+            result.update(extract_data_from_dep(result['dzial_i_o'], result['dzial_iv']))
             extended_results.append(result)
         return extended_results
